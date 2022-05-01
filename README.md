@@ -1,2 +1,3 @@
-# vertigo
-Opinionated Vertex AI Online Feature Store Framework.
+# `vertigo`
+
+An opinionated Vertex AI Online Feature Store Framework.
