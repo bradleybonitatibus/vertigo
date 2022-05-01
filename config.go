@@ -1,6 +1,9 @@
 package vertigo
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // DefaultRegion is the region
 const DefaultRegion = "us-central1"
@@ -8,6 +11,9 @@ const DefaultRegion = "us-central1"
 // VertexEndpoint is the URL:PORT for the AI Platform API. This is used in providing
 // non-default regional endpoints for Vertex AI.
 const VertexEndpoint = "aiplatform.googleapis.com:443"
+
+var ErrInvalidProjectID = errors.New("project id is not valid")
+var ErrInvalidFeatureStoreName = errors.New("feature store name is not valid")
 
 // Config is the struct the contains configuration that is used in the Vertex AI API.
 type Config struct {
@@ -24,28 +30,46 @@ type Config struct {
 }
 
 // ConfigBuilder provides a fluent interface for building the Vertigo Config.
+// If Region is not set, it will fall back to the DefaultRegion value.
 type ConfigBuilder interface {
 	WithRegion(region string) ConfigBuilder
 	WithProjectID(projectID string) ConfigBuilder
 	WithFeatureStoreName(featureStore string) ConfigBuilder
-	Apply() *Config
+	Apply() (*Config, error)
 }
 
+// builderFunc modifies a pointer to Config to set a value. This is to be used by the ConfigBuilder to
+// lazily-evaluate the changes to the Config, and apply them during the call to the "Apply" function.
 type builderFunc func(cfg *Config)
 
 type builder struct {
 	actions []builderFunc
 }
 
-func (b *builder) Apply() *Config {
+// Apply applies all the changes and validates the Config fields.
+// If Region is not set, it will fall back to the DefaultRegion value.
+func (b *builder) Apply() (*Config, error) {
 	cfg := &Config{}
 	for _, a := range b.actions {
 		a(cfg)
 	}
 
-	return cfg
+	if cfg.Region == "" {
+		cfg.Region = DefaultRegion
+	}
+
+	if cfg.ProjectID == "" {
+		return nil, ErrInvalidProjectID
+	}
+
+	if cfg.FeatureStoreName == "" {
+		return nil, ErrInvalidFeatureStoreName
+	}
+
+	return cfg, nil
 }
 
+// WithRegion sets the GCP Region for the Config.
 func (b *builder) WithRegion(region string) ConfigBuilder {
 	b.actions = append(b.actions, func(cfg *Config) {
 		cfg.Region = region
@@ -53,6 +77,7 @@ func (b *builder) WithRegion(region string) ConfigBuilder {
 	return b
 }
 
+// WithProjectID sets the ProjectID in the Config struct.
 func (b *builder) WithProjectID(projectID string) ConfigBuilder {
 	b.actions = append(b.actions, func(cfg *Config) {
 		cfg.ProjectID = projectID
@@ -60,6 +85,7 @@ func (b *builder) WithProjectID(projectID string) ConfigBuilder {
 	return b
 }
 
+// WithFeatureStoreName sets the FeatureStoreName field in the Config struct.
 func (b *builder) WithFeatureStoreName(featureStore string) ConfigBuilder {
 	b.actions = append(b.actions, func(cfg *Config) {
 		cfg.FeatureStoreName = featureStore
@@ -67,6 +93,7 @@ func (b *builder) WithFeatureStoreName(featureStore string) ConfigBuilder {
 	return b
 }
 
+// NewConfigBuilder returns a fluent API to build the Config struct using the ConfigBuilder interface.
 func NewConfigBuilder() ConfigBuilder {
 	return &builder{
 		actions: []builderFunc{},

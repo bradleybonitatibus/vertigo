@@ -1,21 +1,55 @@
 package vertigo
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
 
 func TestNewConfigBuilder(t *testing.T) {
 	const nane = "northamerica-northeast1"
 	const myProj = "my-project"
 	const myFS = "my_featurestore"
-	b := NewConfigBuilder()
+	type test struct {
+		region    string
+		projectID string
+		fsName    string
+		err       error
+	}
 
-	cfg := b.WithRegion(nane).
-		WithProjectID(myProj).
-		WithFeatureStoreName(myFS).
-		Apply()
+	tests := []test{
+		{
+			region:    "",
+			projectID: myProj,
+			fsName:    myFS,
+			err:       nil,
+		},
+		{
+			region:    nane,
+			projectID: "",
+			fsName:    myFS,
+			err:       ErrInvalidProjectID,
+		},
+		{
+			region:    nane,
+			projectID: myProj,
+			fsName:    "",
+			err:       ErrInvalidFeatureStoreName,
+		},
+	}
 
-	if cfg.Region != nane ||
-		cfg.ProjectID != myProj ||
-		cfg.FeatureStoreName != myFS {
-		t.Error("Builder failed to set cfg values correctly")
+	for _, tc := range tests {
+		cfg, err := NewConfigBuilder().WithRegion(tc.region).
+			WithProjectID(tc.projectID).
+			WithFeatureStoreName(tc.fsName).
+			Apply()
+
+		if errors.Is(err, tc.err) {
+			continue
+		}
+
+		if (cfg.Region != tc.region && cfg.Region != DefaultRegion) || cfg.ProjectID != tc.projectID || cfg.FeatureStoreName != tc.fsName {
+			t.Errorf("builder failed to set Config fields: %v", tc)
+		}
+
 	}
 }
