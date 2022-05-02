@@ -8,11 +8,14 @@ import (
 	aiplatformpb "google.golang.org/genproto/googleapis/cloud/aiplatform/v1beta1"
 )
 
+// Client is the Vertigo client, which uses the aiplatformv1beta1 gRPC API to communicate
+// with the FeaturestoreOnlineServingClient.
 type Client struct {
 	cfg *Config
 	v   *aiplatform.FeaturestoreOnlineServingClient
 }
 
+// NewVertigoClient creates a Client using the provided Config.
 func NewVertigoClient(ctx context.Context, cfg *Config) (*Client, error) {
 	c, err := aiplatform.NewFeaturestoreOnlineServingClient(
 		ctx,

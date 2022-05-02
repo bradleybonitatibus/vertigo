@@ -5,8 +5,9 @@ import (
 	"testing"
 )
 
+const nane = "northamerica-northeast1"
+
 func TestNewConfigBuilder(t *testing.T) {
-	const nane = "northamerica-northeast1"
 	const myProj = "my-project"
 	const myFS = "my_featurestore"
 	type test struct {
