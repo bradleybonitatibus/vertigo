@@ -141,3 +141,8 @@ func (c *Client) GetEntity(ctx context.Context, query *Query) (*Entity, error) {
 		data:   res.EntityView.Data,
 	}, nil
 }
+
+// Close closes the underlying vertex AI gRPC client.
+func (c *Client) Close() error {
+	return c.v.Close()
+}
