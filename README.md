@@ -52,24 +52,24 @@ func main() {
 	// projectID = "my-project-id"
 	// featurestoreName = "my_featurestore_name"
 
-	c, err := vertigo.NewVertigoClient(context.Background(), &vertigo.Config{
+	client, err := vertigo.NewClient(context.Background(), &vertigo.Config{
 		Region:           region,
 		ProjectID:        projectID,
 		FeatureStoreName: featurestoreName,
 	})
-	defer c.Close()
+	defer client.Close()
 	if err != nil {
 		log.Fatalf("vertigo.NewVertigoClient: %v", err)
 	}
 	myCust := MyCustomer{}
 
-	entity, err := c.GetEntity(context.Background(), &vertigo.Query{
+	entity, err := client.GetEntity(context.Background(), &vertigo.Query{
 		EntityType: "my_customer",
 		EntityID:   "123abc",
 		Features:   []string{"*"},
 	})
 	if err != nil {
-		log.Fatalf("c.GetEntity: %v", err)
+		log.Fatalf("client.GetEntity: %v", err)
 	}
 	err = entity.ScanStruct(&myCust)
 	if err != nil {

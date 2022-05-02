@@ -17,8 +17,8 @@ type Client struct {
 	v   *aiplatform.FeaturestoreOnlineServingClient
 }
 
-// NewVertigoClient creates a Client using the provided Config.
-func NewVertigoClient(ctx context.Context, cfg *Config) (*Client, error) {
+// NewClient creates a Client using the provided Config.
+func NewClient(ctx context.Context, cfg *Config) (*Client, error) {
 	fmt.Println(cfg.APIEndpoint())
 	c, err := aiplatform.NewFeaturestoreOnlineServingClient(
 		ctx,

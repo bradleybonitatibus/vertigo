@@ -32,10 +32,7 @@ func isStructPointer(dst interface{}) error {
 
 // isValuePointer returns true when a reflected Value is of Kind Ptr.
 func isValuePointer(v reflect.Value) bool {
-	if v.Kind() == reflect.Ptr {
-		return true
-	}
-	return false
+	return v.Kind() == reflect.Ptr
 }
 
 // setSlice is a helper function to set
@@ -46,6 +43,9 @@ func setSlice(v reflect.Value, x interface{}) {
 // loadMap loads a vertex tag into it's respective field index, field name, and type from an interface.
 func loadMap(dst interface{}) map[string]valueMapper {
 	provided := reflect.ValueOf(dst)
+	if err := isStructPointer(provided); err != nil {
+		panic("provided interface was not a struct pointer")
+	}
 	ind := reflect.Indirect(provided)
 	providedType := ind.Type()
 	vm := map[string]valueMapper{}
