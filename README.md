@@ -28,7 +28,22 @@ load the values into the struct.
 
 ## Example
 
-The following is an example of leveraging the Vertex AI Featurestore for a "customer" entity.
+The following is an example of using `vertigo` for a "customer" entity, which has the following features
+defined in Vertex AI Featurestore:
+```yaml
+entity_type: my_customer
+features:
+  - name: segment
+    type: STRING
+  - name: market_audiences
+    type: STRING_ARRAY
+  - name: six_month_spend
+    type: DOUBLE
+  - name: another_numeric_feature
+    type: INT64 
+```
+
+Note that the `${feature_name}` directly maps to the `vertex:"${feature_name}"` struct tag.
 
 ```go
 package main
