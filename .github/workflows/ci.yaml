@@ -26,8 +26,13 @@ jobs:
 
       - name: Build
         run: go build -v ./...
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.ADC }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
 
       - name: Test
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.ADC }}
         run: go test -v ./...
