@@ -22,6 +22,10 @@ fields in the `ReadFeatureValuesResponse`.
 The `Entity` has a receiver function that can scan the header and data into a user-provided
 struct pointer.
 
+You can provide an `interface{}` (pointer to a struct) type to the `entity.ScanStruct` function,
+and as long as your struct has a `vertex` tag with the corresponding feature name, it will
+load the values into the struct.
+
 ## Example
 
 The following is an example of leveraging the Vertex AI Featurestore for a "customer" entity.
@@ -59,7 +63,7 @@ func main() {
 	})
 	defer client.Close()
 	if err != nil {
-		log.Fatalf("vertigo.NewVertigoClient: %v", err)
+		log.Fatalf("vertigo.NewClient: %v", err)
 	}
 	myCust := MyCustomer{}
 
