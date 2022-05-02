@@ -53,3 +53,14 @@ func TestNewConfigBuilder(t *testing.T) {
 		}
 	}
 }
+
+func TestConfig_ParentPath(t *testing.T) {
+	cfg := &Config{
+		ProjectID:        "my-project",
+		Region:           nane,
+		FeatureStoreName: "my_featurestore",
+	}
+	if cfg.ParentPath() != "projects/my-project/locations/northamerica-northeast1/featurestores/my_featurestore" {
+		t.Errorf("invalid ParentPath(): %v", cfg.ParentPath())
+	}
+}
