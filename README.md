@@ -6,11 +6,22 @@ An alternative Vertex AI (AI Platform) Online Featurestore Client.
 
 The main goal of this project is to provide an alternative way of interacting with the Online Featurestore
 Service. Specifically, several semantics are introduced in this API:
+
 - `Query`
 - `Config`
 - `Entity`
 
-The `Query` type is a 
+The `Query` type contains parameterized inputs for the ReadFeatureValues RPC, containing
+the entity ID, features to return (projection), and the entity type.
+
+The `Config` type contains project level configuration, around the GCP Region, GCP Project ID,
+and the Featurestore you are querying from.
+
+Lastly, the `Entity` type is a wrapper struct around the `Header` and `EntityView.Data`
+fields in the `ReadFeatureValuesResponse`.
+The `Entity` has a receiver function that can scan the header and data into a user-provided
+struct pointer.
+
 ## Example
 
 The following is an example of leveraging the Vertex AI Featurestore for a "customer" entity.
@@ -63,7 +74,7 @@ func main() {
 	err = entity.ScanStruct(&myCust)
 	if err != nil {
 		log.Fatalf("entity.ScanStruct: %v", err)
-    }
+	}
 	// continue using MyCustomer as you wish.
 }
 ```
