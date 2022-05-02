@@ -51,6 +51,5 @@ func TestNewConfigBuilder(t *testing.T) {
 		if (cfg.Region != tc.region && cfg.Region != DefaultRegion) || cfg.ProjectID != tc.projectID || cfg.FeatureStoreName != tc.fsName {
 			t.Errorf("builder failed to set Config fields: %v", tc)
 		}
-
 	}
 }

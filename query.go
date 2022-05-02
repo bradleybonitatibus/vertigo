@@ -2,7 +2,7 @@ package vertigo
 
 import (
 	"fmt"
-	"google.golang.org/genproto/googleapis/cloud/aiplatform/v1"
+	aiplatformpb "google.golang.org/genproto/googleapis/cloud/aiplatform/v1beta1"
 )
 
 // Query represents a query to the Vertex AI Online Feature Store API for
@@ -15,18 +15,18 @@ type Query struct {
 
 // BuildRequest translates the Query struct into an AI Platform ReadFeatureValuesRequest, which is submitted
 // to the Vertex AI Online Feature Store API to retrieve the Feature Values for an entity.
-func (q *Query) BuildRequest() *aiplatform.ReadFeatureValuesRequest {
-	return &aiplatform.ReadFeatureValuesRequest{
-		EntityType:      q.EntityType,
+func (q *Query) BuildRequest(cfg *Config) *aiplatformpb.ReadFeatureValuesRequest {
+	return &aiplatformpb.ReadFeatureValuesRequest{
+		EntityType:      makeVertexEntityTypePath(cfg, q.EntityType),
 		EntityId:        q.EntityID,
-		FeatureSelector: &aiplatform.FeatureSelector{IdMatcher: &aiplatform.IdMatcher{Ids: q.Features}},
+		FeatureSelector: &aiplatformpb.FeatureSelector{IdMatcher: &aiplatformpb.IdMatcher{Ids: q.Features}},
 	}
 }
 
 // makeVertexEntityTypePath builds the resource name for the specific entity being queried.
-func makeVertexEntityTypePath(cfg *Config, entityID string) string {
+func makeVertexEntityTypePath(cfg *Config, entityType string) string {
 	return fmt.Sprintf(
-		"projects/%v/locations/%v/featurestores/%v/entityTypes/%v",
-		cfg.ProjectID, cfg.Region, cfg.FeatureStoreName, entityID,
+		"%v/entityTypes/%v",
+		cfg.ParentPath(), entityType,
 	)
 }

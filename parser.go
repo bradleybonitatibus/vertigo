@@ -5,6 +5,8 @@ import (
 	"reflect"
 )
 
+const vertexTag = "vertex"
+
 // valueMapper is used to map struct field names to their field index, tag name, and type.
 type valueMapper struct {
 	fieldIdx    int
@@ -34,4 +36,31 @@ func isValuePointer(v reflect.Value) bool {
 		return true
 	}
 	return false
+}
+
+// setSlice is a helper function to set
+func setSlice(v reflect.Value, x interface{}) {
+	v.Set(reflect.MakeSlice(reflect.TypeOf(x), v.Len(), v.Len()))
+}
+
+// loadMap loads a vertex tag into it's respective field index, field name, and type from an interface.
+func loadMap(dst interface{}) map[string]valueMapper {
+	provided := reflect.ValueOf(dst)
+	ind := reflect.Indirect(provided)
+	providedType := ind.Type()
+	vm := map[string]valueMapper{}
+	for i := 0; i < ind.NumField(); i++ {
+		structField := providedType.Field(i)
+		tv, ok := structField.Tag.Lookup(vertexTag)
+		if !ok {
+			continue
+		}
+		vm[tv] = valueMapper{
+			fieldIdx:    i,
+			t:           structField.Type,
+			fieldName:   structField.Name,
+			vertexField: tv,
+		}
+	}
+	return vm
 }
