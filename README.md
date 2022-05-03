@@ -43,7 +43,7 @@ features:
     type: INT64 
 ```
 
-Note that the `${feature_name}` directly maps to the `vertex:"${feature_name}"` struct tag.
+Note that the `${features[i].name}` directly maps to the `vertex:"${feature_name}"` struct tag.
 
 ```go
 package main
@@ -70,8 +70,8 @@ func main() {
 	// region = "my-gcp-region"
 	// projectID = "my-project-id"
 	// featurestoreName = "my_featurestore_name"
-
-	client, err := vertigo.NewClient(context.Background(), &vertigo.Config{
+    ctx := context.Background()
+	client, err := vertigo.NewClient(ctx, &vertigo.Config{
 		Region:           region,
 		ProjectID:        projectID,
 		FeatureStoreName: featurestoreName,
@@ -82,7 +82,7 @@ func main() {
 	}
 	myCust := MyCustomer{}
 
-	entity, err := client.GetEntity(context.Background(), &vertigo.Query{
+	entity, err := client.GetEntity(ctx, &vertigo.Query{
 		EntityType: "my_customer",
 		EntityID:   "123abc",
 		Features:   []string{"*"},
