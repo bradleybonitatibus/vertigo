@@ -1,6 +1,6 @@
 # `vertigo`
 
-An alternative Vertex AI (AI Platform) Online Featurestore Client.
+An alternative Vertex AI (AI Platform) Featurestore Online Serving Client.
 
 ## Goals
 
