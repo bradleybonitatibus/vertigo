@@ -30,6 +30,7 @@ load the values into the struct.
 
 The following is an example of using `vertigo` for a "customer" entity, which has the following features
 defined in Vertex AI Featurestore:
+
 ```yaml
 entity_type: my_customer
 features:
@@ -70,7 +71,7 @@ func main() {
 	// region = "my-gcp-region"
 	// projectID = "my-project-id"
 	// featurestoreName = "my_featurestore_name"
-    ctx := context.Background()
+	ctx := context.Background()
 	client, err := vertigo.NewClient(ctx, &vertigo.Config{
 		Region:           region,
 		ProjectID:        projectID,
