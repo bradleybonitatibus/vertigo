@@ -61,69 +61,12 @@ func (e *Entity) ScanStruct(dst interface{}) error {
 	for i, fd := range e.header.FeatureDescriptors {
 		fv := e.data[i].GetValue()
 		lookup, ok := mapping[fd.Id]
-		if !ok {
+		if !ok || fv == nil {
 			continue
 		}
-		var sf reflect.Value
-		if isValuePointer(v) {
-			sf = reflect.Indirect(v).Field(lookup.fieldIdx)
-		} else {
-			sf = v.Field(lookup.fieldIdx)
-		}
+		structField := extractStructField(v, lookup)
 
-		if fv.GetValue() == nil {
-			continue
-		}
-
-		switch fv.Value.(type) {
-		case *aiplatformpb.FeatureValue_BoolValue:
-			bv := fv.GetBoolValue()
-			if isValuePointer(v) {
-				sf.Set(reflect.ValueOf(&bv))
-			} else {
-				sf.SetBool(bv)
-			}
-
-		case *aiplatformpb.FeatureValue_BoolArrayValue:
-			values := fv.GetBoolArrayValue().Values
-			sf.Set(reflect.MakeSlice(reflect.TypeOf(values), len(values), len(values)))
-
-		case *aiplatformpb.FeatureValue_Int64Value:
-			iv := fv.GetInt64Value()
-			if isValuePointer(v) {
-				sf.Set(reflect.ValueOf(&iv))
-			} else {
-				sf.SetInt(iv)
-			}
-
-		case *aiplatformpb.FeatureValue_Int64ArrayValue:
-			setSlice(v, fv.GetInt64ArrayValue().Values)
-
-		case *aiplatformpb.FeatureValue_DoubleValue:
-			dv := fv.GetDoubleValue()
-			if isValuePointer(v) {
-				sf.Set(reflect.ValueOf(&dv))
-			} else {
-				sf.SetFloat(dv)
-			}
-
-		case *aiplatformpb.FeatureValue_DoubleArrayValue:
-			setSlice(v, fv.GetDoubleArrayValue().Values)
-
-		case *aiplatformpb.FeatureValue_StringValue:
-			stringV := fv.GetStringValue()
-			if isValuePointer(v) {
-				sf.Set(reflect.ValueOf(&stringV))
-			} else {
-				sf.SetString(stringV)
-			}
-
-		case *aiplatformpb.FeatureValue_StringArrayValue:
-			setSlice(v, fv.GetStringArrayValue().Values)
-
-		case *aiplatformpb.FeatureValue_BytesValue:
-			sf.SetBytes(fv.GetBytesValue())
-		}
+		setStructField(fv, structField)
 	}
 	return nil
 }
