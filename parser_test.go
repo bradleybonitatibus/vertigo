@@ -3,9 +3,10 @@ package vertigo
 import (
 	"errors"
 	"fmt"
-	aiplatformpb "google.golang.org/genproto/googleapis/cloud/aiplatform/v1beta1"
 	"reflect"
 	"testing"
+
+	"cloud.google.com/go/aiplatform/apiv1beta1/aiplatformpb"
 )
 
 type myStruct struct {

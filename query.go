@@ -2,7 +2,7 @@ package vertigo
 
 import (
 	"fmt"
-	aiplatformpb "google.golang.org/genproto/googleapis/cloud/aiplatform/v1beta1"
+	"cloud.google.com/go/aiplatform/apiv1beta1/aiplatformpb"
 )
 
 // Query represents a query to the Vertex AI Online Feature Store API for

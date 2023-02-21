@@ -19,5 +19,5 @@ security:
 	semgrep --error --metrics=on --strict --config=p/golang -o sast.json --json
 
 test: clean
-	GOOGLE_APPLICATIO_CREDENTIALS=${SA} go test -cover -coverprofile=coverage.out  ./...
+	GOOGLE_APPLICATION_CREDENTIALS=${SA} go test -cover -coverprofile=coverage.out  ./...
 	go tool cover -html=coverage.out
