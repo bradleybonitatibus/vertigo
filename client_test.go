@@ -2,9 +2,10 @@ package vertigo
 
 import (
 	"context"
-	aiplatformpb "google.golang.org/genproto/googleapis/cloud/aiplatform/v1beta1"
 	"os"
 	"testing"
+
+	"cloud.google.com/go/aiplatform/apiv1beta1/aiplatformpb"
 )
 
 func TestNewClient(t *testing.T) {
@@ -32,16 +33,16 @@ func TestEntity_ScanStruct(t *testing.T) {
 		header: &aiplatformpb.ReadFeatureValuesResponse_Header{
 			EntityType: "my_entity",
 			FeatureDescriptors: []*aiplatformpb.ReadFeatureValuesResponse_FeatureDescriptor{
-				&aiplatformpb.ReadFeatureValuesResponse_FeatureDescriptor{
+				{
 					Id: "my_feature",
 				},
-				&aiplatformpb.ReadFeatureValuesResponse_FeatureDescriptor{
+				{
 					Id: "another_feature",
 				},
 			},
 		},
 		data: []*aiplatformpb.ReadFeatureValuesResponse_EntityView_Data{
-			&aiplatformpb.ReadFeatureValuesResponse_EntityView_Data{
+			{
 				Data: &aiplatformpb.ReadFeatureValuesResponse_EntityView_Data_Value{
 					Value: &aiplatformpb.FeatureValue{
 						Value: &aiplatformpb.FeatureValue_Int64Value{
@@ -50,7 +51,7 @@ func TestEntity_ScanStruct(t *testing.T) {
 					},
 				},
 			},
-			&aiplatformpb.ReadFeatureValuesResponse_EntityView_Data{
+			{
 				Data: &aiplatformpb.ReadFeatureValuesResponse_EntityView_Data_Value{
 					Value: &aiplatformpb.FeatureValue{
 						Value: &aiplatformpb.FeatureValue_DoubleValue{

@@ -2,8 +2,9 @@ package vertigo
 
 import (
 	"errors"
-	aiplatformpb "google.golang.org/genproto/googleapis/cloud/aiplatform/v1beta1"
 	"reflect"
+
+	"cloud.google.com/go/aiplatform/apiv1beta1/aiplatformpb"
 )
 
 const vertexTag = "vertex"

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"google.golang.org/api/option"
-	aiplatformpb "google.golang.org/genproto/googleapis/cloud/aiplatform/v1beta1"
+	"cloud.google.com/go/aiplatform/apiv1beta1/aiplatformpb"
 	"reflect"
 )
 
